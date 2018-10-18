@@ -24,23 +24,47 @@ if(hashInLocalStorage){
 index = 0
 while(index<keys['length']){
     div = document.createElement('div')
+    div.className = 'row'
     main.appendChild(div)
     row = keys[index]
     index2 = 0
     while (index2<row['length']){
         kbd = document.createElement('kbd')
-        kbd.textContent = row[index2]
+        span = document.createElement('span')
+        span.textContent = row[index2]
+        span.className = 'text'
+        kbd.appendChild(span)
+        kbd.className = 'key'
         button = document.createElement('button')
         button.textContent = 'Edit'
 
         button.id=row[index2]
-        button.onclick = function(keyPress){
-            key = keyPress['target']['id']
-            newAddress = prompt('Edit a new address.')
-            hash[key] = newAddress
-            localStorage.setItem('saveHash',JSON.stringify(hash))
+        img = document.createElement('img')
+        if(hash[row[index2]]){
+            img.src = 'http://'+hash[row[index2]]+'/favicon.ico'
+        }else{
+            img.src = '//i.loli.net/2018/10/18/5bc793cb24685.png'
+        }
+        img.onerror = function(imgError){
+            imgError.target.src = '//i.loli.net/2018/10/18/5bc793cb24685.png'
         }
 
+
+
+
+        button.onclick = function(keyPress){
+            button2 = keyPress['target']
+            img2 = button2.previousSibling
+            key = button2['id']
+            newAddress = prompt('Edit a new address.')
+            hash[key] = newAddress
+            img2.src = 'http://'+hash[row[index2]]+'/favicon.ico'
+            img.onerror = function(imgError){
+                imgError.target.src = '//i.loli.net/2018/10/18/5bc793cb24685.png'
+            }
+            localStorage.setItem('saveHash',JSON.stringify(hash))
+        }
+        kbd.appendChild(img)
         kbd.appendChild(button)
         div.appendChild(kbd)
         index2 = index2 + 1
