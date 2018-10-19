@@ -1,81 +1,104 @@
-keys = {
-    0:['q','w','e','r','t','y','u','i','o','p'],
-    1:['a','s','d','f','g','h','j','k','l'],
-    2:['z','x','c','v','b','n','m'],
-    length:3
-}
+// 1. initialization
+var hashA = init()
+var keys = hashA['keys']
+var hash = hashA['hash']
 
-hash = {
-    q: 'qq.com',
-    w: 'weixin.com',
-    e: 'ebay.ca',
-    r: 'renren.com',
-    t: 'tianya.com',
-    u: 'uc.com',
-    i: 'aiqiyi.com',
-}
-
-hashInLocalStorage = JSON.parse(localStorage.getItem('saveHash')||'null')
-if(hashInLocalStorage){
-    hash = hashInLocalStorage
-}
-
+// 2. Create the Keyboard
 // traverse keys, create kbe tag.
-index = 0
-while(index<keys['length']){
-    div = document.createElement('div')
-    div.className = 'row'
-    main.appendChild(div)
-    row = keys[index]
-    index2 = 0
-    while (index2<row['length']){
-        kbd = document.createElement('kbd')
-        span = document.createElement('span')
-        span.textContent = row[index2]
-        span.className = 'text'
-        kbd.appendChild(span)
-        kbd.className = 'key'
-        button = document.createElement('button')
-        button.textContent = 'Edit'
+generateKeyboard(keys, hash)
 
-        button.id=row[index2]
-        img = document.createElement('img')
-        if(hash[row[index2]]){
-            img.src = 'http://'+hash[row[index2]]+'/favicon.ico'
-        }else{
-            img.src = '//i.loli.net/2018/10/18/5bc793cb24685.png'
-        }
-        img.onerror = function(imgError){
-            imgError.target.src = '//i.loli.net/2018/10/18/5bc793cb24685.png'
-        }
+// 3. listening User
+listenToUser(hash)
 
+/*-- ------------------------------------------------------ --*/
 
-
-
-        button.onclick = function(keyPress){
-            button2 = keyPress['target']
-            img2 = button2.previousSibling
-            key = button2['id']
-            newAddress = prompt('Edit a new address.')
-            hash[key] = newAddress
-            img2.src = 'http://'+hash[row[index2]]+'/favicon.ico'
-            img.onerror = function(imgError){
-                imgError.target.src = '//i.loli.net/2018/10/18/5bc793cb24685.png'
-            }
-            localStorage.setItem('saveHash',JSON.stringify(hash))
-        }
-        kbd.appendChild(img)
-        kbd.appendChild(button)
-        div.appendChild(kbd)
-        index2 = index2 + 1
-    }
-
-    index = index+1
+// Tool Function
+function getFromLocalStorage(name){
+    return JSON.parse(localStorage.getItem(name) || 'null')
+}
+function tag(tagName){
+    return document.createElement(tagName)
 }
 
-document.onkeypress = function (keyPress) {
-    key = keyPress['key']
-    website = hash[key]
-    //location.href = 'http://' + website
-    window.open('http://' + website, '_blank')
+function createSpan(textContent){
+    var span = tag('span')
+    span.textContent = textContent
+    span.className = "text"
+    return span
+}
+function createButton(id){
+    var button = tag('button')
+    button.textContent = 'Edit'
+    button.id = id
+    button.onclick = function(xzkjcnxlkcjlk){
+        var button2 = xzkjcnxlkcjlk['target']
+        var img2 = button2.previousSibling
+        var key = button2['id'] // q w e r t
+        var x = prompt('Edit a new address.') // youtube.com.com
+        hash[key] = x  // change hash
+        img2.src = 'http://'+x + '/favicon.ico'
+        img2.onerror = function(xxx){
+            xxx.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+        }
+        localStorage.setItem('zzz', JSON.stringify(hash))
+    }
+    return button
+}
+function createImage(domain){
+    var img = tag('img')
+    if(domain){
+        img.src = 'http://'+ domain + '/favicon.ico'
+    }else{
+        img.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+    }
+    img.onerror = function(xxx){
+        xxx.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+    }
+    return img
+}
+function init(){
+    var keys = {
+        '0': {0:'q',1:'w',2:'e',3:'r',4:'t',5:'y',6:'u',7:'i',8:'o',9:'p',length:10},
+        '1': {0:'a',1:'s',2:'d',3:'f',4:'g',5:'h',6:'j',7:'k',8:'l',length:9},
+        '2': {0:'z',1:'x',2:'c',3:'v',4:'b',5:'n',6:'m',length:7},
+        'length': 3
+    }
+    var hash = {'q': 'qq.com', 'w': 'weibo.com', 'e': 'ebay.ca', 'r': 'rickylei7.github.io/', 't': 'thebay.com', 'y': 'youtube.com', 'i': 'instagram.com',  'p': undefined, 'a': 'amazon.ca', 'm': 'www.mcdonalds.com'
+    }
+    // Catch localStorage from zzz
+    var hashInLocalStorage = getFromLocalStorage('zzz')
+    if(hashInLocalStorage){
+        hash = hashInLocalStorage
+    }
+    return {
+        "keys": keys,
+        "hash": hash
+    }
+}
+function generateKeyboard(keys, hash){
+    for(var index=0; index< keys['length']; index = index+1 ){
+        var div = tag('div')
+        div.className = 'row'
+        main.appendChild(div)
+        var row = keys[index]
+        for(var index2 =0;index2< row['length']; index2 = index2 + 1){
+            var span = createSpan(row[index2])
+            var button = createButton(row[index2])
+            var img = createImage(hash[row[index2]])
+            var kbd = tag('kbd')
+            kbd.className = 'key'
+            kbd.appendChild(span)
+            kbd.appendChild(img)
+            kbd.appendChild(button)
+            div.appendChild(kbd)
+        }
+    }
+}
+function listenToUser(hash){
+    document.onkeypress = function(xzkjcnxlkcjlk){
+        var key = xzkjcnxlkcjlk['key']
+        var website = hash[key]
+
+        window.open('http://'+website, '_blank')
+    }
 }
